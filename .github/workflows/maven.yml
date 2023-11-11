@@ -78,7 +78,7 @@ jobs:
           cache: maven
       - name: Setup Config
         run: |
-          echo 'spring.datasource.url=jdbc:postgresql://localhost:5432/blogSecurity' > src/main/resources/application.yml
+          echo 'spring.datasource.url=jdbc:postgresql://localhost:5432/blogSecurity' > src/main/resources/application.properties
       - name: Build with Maven
         run: mvn clean install -B
       - name: Login to Docker Hub
