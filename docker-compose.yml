@@ -70,7 +70,8 @@ services:
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       - EMAIL_USERNAME=${EMAIL_USERNAME}
     volumes:
-      - /Users/mac/Documents/postgres_container_data:/var/lib/postgresql/data
+      - /Users/decagon/Documents/postgres_container_data:/var/lib/postgresql/data
+
     networks:
       - bridge
     restart: unless-stopped
@@ -96,7 +97,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
-      - /Users/mac/Documents/postgres_container_data:/var/lib/pgadmin/
+      - /Users/decagon/Documents/postgres_container_data:/var/lib/pgadmin/
     ports:
       - 5050:80
     networks:
