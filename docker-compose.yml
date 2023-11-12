@@ -1,56 +1,110 @@
-version: '3.3'
+#version: '3.3'
+#services:
+#
+#  karrigo:
+#    container_name: karrigo
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8085:8085"
+#    environment:
+#      - EMAIL_USERNAME=${EMAIL_USERNAME}
+#      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+#    depends_on:
+#      - postgres
+#    networks:
+#      - bridge
+#
+#  postgres:
+#    image: postgres
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_USER=Blaze$$1
+#      - POSTGRES_DB=blogSecurity
+#    volumes:
+#      - postgres:/data/postgres
+#    networks:
+#      - bridge
+#
+#  pgadmin:
+#    container_name: karrigo_pgadmin
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+#      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+#      PGADMIN_CONFIG_SERVER_MODE: 'False'
+#    volumes:
+#      - pgadmin:/var/lib/pgadmin
+#    ports:
+#      - 5050:80
+#    networks:
+#      - bridge
+#    restart: unless-stopped
+#
+#
+#networks:
+#  bridge:
+#    driver: bridge
+#  spring:
+#    driver: bridge
+#
+#volumes:
+#  postgres:
+#  pgadmin:
+
+version: '3'
 services:
 
-  karrigo:
-    container_name: karrigo
+  spring-boot-docker:
     build:
       context: .
       dockerfile: Dockerfile
+    image: spring-boot-docker
+    container_name: spring-boot-docker_container
     ports:
-      - "8085:8085"
+      - "8080:8080"
     environment:
-      - EMAIL_USERNAME=${EMAIL_USERNAME}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
-    depends_on:
-      - postgres
+      - EMAIL_USERNAME=${EMAIL_USERNAME}
+    volumes:
+      - /Users/mac/Documents/postgres_container_data:/var/lib/postgresql/data
     networks:
       - bridge
+    restart: unless-stopped
 
-  postgres:
+  postgres_db:
+    container_name: postgres_container
     image: postgres
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=Blaze$$1
-      - POSTGRES_DB=blogSecurity
-    volumes:
-      - postgres:/data/postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Blaze$$1
+      POSTGRES_DB: blogSecurity
     networks:
       - bridge
+    restart: unless-stopped
 
   pgadmin:
-    container_name: karrigo_pgadmin
+    container_name: swiftselect_pgadmin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
-      - pgadmin:/var/lib/pgadmin
+      - /Users/mac/Documents/postgres_container_data:/var/lib/pgadmin/
     ports:
       - 5050:80
     networks:
       - bridge
     restart: unless-stopped
 
-
 networks:
   bridge:
     driver: bridge
   spring:
     driver: bridge
-
-volumes:
-  postgres:
-  pgadmin:
