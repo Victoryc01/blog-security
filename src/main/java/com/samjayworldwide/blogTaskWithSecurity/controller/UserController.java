@@ -71,7 +71,7 @@ public class UserController {
 
     @GetMapping("/test")
     public String home(){
-           return "here we are!";
+           return "here we are now!";
     }
 
 
