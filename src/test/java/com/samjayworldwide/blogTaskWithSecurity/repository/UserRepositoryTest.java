@@ -42,7 +42,7 @@ public class UserRepositoryTest {
                 .retypePassword("samuelJackson")
                 .build();
         User savedUser = userRepository.save(user);
-        Optional<User> foundUser = userRepository.findById(1L);
+        Optional<User> foundUser = userRepository.findById(user.getId());
         Assertions.assertThat(savedUser).isNotNull();
         Assertions.assertThat(foundUser).isPresent();
     }

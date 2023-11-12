@@ -66,7 +66,7 @@ public class CommentRepositoryTest {
                 .post(post)
                 .build();
        Comment savedComment = commentRepository.save(comment);
-        List<Comment> comments = commentRepository.findCommentsByPostId(comment.getId());
+        List<Comment> comments = commentRepository.findCommentsByPostId(post.getId());
         Assertions.assertThat(savedComment).isNotNull();
         Assertions.assertThat(comments.size()).isGreaterThan(0);
     }

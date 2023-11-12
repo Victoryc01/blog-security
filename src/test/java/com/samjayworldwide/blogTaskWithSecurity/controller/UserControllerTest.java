@@ -6,9 +6,11 @@ import com.samjayworldwide.blogTaskWithSecurity.dto.request.CommentRequestDto;
 import com.samjayworldwide.blogTaskWithSecurity.dto.request.PostRequestDto;
 import com.samjayworldwide.blogTaskWithSecurity.dto.request.UserRequestDto;
 import com.samjayworldwide.blogTaskWithSecurity.entity.Comment;
+import com.samjayworldwide.blogTaskWithSecurity.entity.Post;
 import com.samjayworldwide.blogTaskWithSecurity.service.CommentService;
 import com.samjayworldwide.blogTaskWithSecurity.service.PostService;
 import com.samjayworldwide.blogTaskWithSecurity.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,6 +30,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
+@TestPropertySource(locations = "classpath:application-integration.properties")
+@ActiveProfiles("controller-tests")
 public class UserControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
@@ -44,10 +50,30 @@ public class UserControllerTest {
         this.commentService = commentService;
         this.objectMapper = new ObjectMapper();
     }
+    @BeforeEach
+    public void registerNewUser(){
+        UserRequestDto userRequestDto = UserRequestDto
+                .builder()
+                .firstName("samuel")
+                .lastName("jackson")
+                .email("junior@email.com")
+                .password("samjay2000")
+                .retypePassword("samjay2000")
+                .build();
+        userService.registerNewUser(userRequestDto);
+    }
 
     @Test
     @WithMockUser(username = "junior@email.com",password = "samjay2000",roles = "USER")
     public void testThatUserControllerReturnsHttpStatusIsCreated() throws Exception {
+
+        PostRequestDto post = PostRequestDto
+                .builder()
+                .content("African style")
+                .category("african")
+                .build();
+        postService.writeAPost(post,1L);
+
         CommentRequestDto commentRequestDto = CommentRequestDto
                 .builder()
                 .message("LovelyPost")
@@ -66,12 +92,21 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "junior@email.com",password = "samjay2000",roles = "USER")
     public void testThatUserControllerReturnsACreatedComment() throws Exception {
+
+        PostRequestDto post = PostRequestDto
+                .builder()
+                .content("African style")
+                .category("african")
+                .build();
+        postService.writeAPost(post,1L);
+
+
+
         CommentRequestDto commentRequestDto = CommentRequestDto
                 .builder()
                 .message("LovelyPost")
                 .build();
         String commentJson =  objectMapper.writeValueAsString(commentRequestDto);
-
 
         mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8080/api/v1/users/addAComment/1/1")
                 .contentType(MediaType.APPLICATION_JSON)
